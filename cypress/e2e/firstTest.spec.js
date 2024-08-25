@@ -55,8 +55,18 @@ describe('Test with backend', () => {
   })
 
   it.only('intercepting and modifying the request and response', () => {
+
+    //Example of modifying request
+    // cy.intercept('POST', '**/articles/', (req) => {
+    //   req.body.article.description = 'This is a description 2'
+    // }).as('postArticle')
+
+    //Example of modifying response
     cy.intercept('POST', '**/articles/', (req) => {
-      req.body.article.description = 'This is a description 2'
+      req.reply(resp => {
+        expect(resp.body.article.description).to.equal('This is a description')
+        resp.body.article.description = 'This is a description 2'
+      })
     }).as('postArticle')
 
     cy.contains('New Article').click()
