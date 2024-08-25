@@ -41,7 +41,7 @@ Cypress.Commands.add('loginToApplication', () => {
 
         // Get the token
         cy.visit('/', {
-            // Save the token into the browser's Application -> Local Storage before doing anything else in browser
+            // Save the token into the browser's Application -> Local Storage BEFORE browser will open any page
             onBeforeLoad(win) {
                 // 'jwtToken' value taken from browser dev tools -> Application -> Local storage
                 win.localStorage.setItem('jwtToken', token)
