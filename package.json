@@ -1,5 +1,5 @@
 {
-  "name": "realworld-app",
+  "name": "realworld-app-cypress-api",
   "version": "1.0.0",
   "main": "index.js",
   "scripts": {

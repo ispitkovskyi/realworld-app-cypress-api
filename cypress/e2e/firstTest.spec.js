@@ -32,7 +32,7 @@ describe('Test with backend', () => {
         .and('contain', 'testing')
   })
 
-  it.only('verify global feed likes count 0', () => {
+  it('verify global feed likes count', () => {
     // A wildcard used at the end of ULR (avoid specifying parameters)
     cy.intercept('GET', 'https://conduit-api.bondaracademy.com/api/articles*', {fixture: 'articles.json'})
 
@@ -52,5 +52,25 @@ describe('Test with backend', () => {
     })
 
     cy.get('app-article-list button').eq(1).click().should('contain', '6')
+  })
+
+  it.only('intercepting and modifying the request and response', () => {
+    cy.intercept('POST', '**/articles/', (req) => {
+      req.body.article.description = 'This is a description 2'
+    }).as('postArticle')
+
+    cy.contains('New Article').click()
+    cy.get('[formcontrolname="title"]').type('This is the title')
+    cy.get('[formcontrolname="description"]').type('This is a description')
+    cy.get('[formcontrolname="body"]').type('This is a body of the article')
+    cy.contains('Publish Article').click()
+
+    // Wait for the API call to be intercepted by the created interceptor saved to 'postArticle' variable
+    cy.wait('@postArticle').then(xhr => {
+      console.log(xhr)
+      expect(xhr.response.statusCode).to.equal(201)
+      expect(xhr.request.body.article.body).to.equal('This is a body of the article')
+      expect(xhr.response.body.article.description).to.equal('This is a description 2')
+    })
   })
 })
