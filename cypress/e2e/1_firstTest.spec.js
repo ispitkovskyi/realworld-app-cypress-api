@@ -8,7 +8,8 @@ describe('Test with backend', () => {
     })
 
     it('verify correct request and response', () => {
-        cy.intercept('POST', 'https://conduit-api.bondaracademy.com/api/articles/')
+        // "apiUrl" is stored in cypress.config.js -> "env" block
+        cy.intercept('POST', Cypress.env("apiUrl") + '/articles/')
             .as('postArticle') //configuration is saved to the postArticle variable
 
         cy.contains('New Article').click()
@@ -66,6 +67,11 @@ describe('Test with backend', () => {
             expect(xhr.request.body.article.body).to.equal('This is a body of the article')
             expect(xhr.response.body.article.description).to.equal('This is a description 2')
         })
+
+        cy.get('@token')  //@token alias saved by commands.js -> 'loginToApplication' function
+            .then((token) => {
+                cy.get('.article-actions').contains('Delete Article').click()
+            })
     })
 
     it('delete a new article in a global feed', () => {
@@ -83,7 +89,7 @@ describe('Test with backend', () => {
                 const token = body.user.token
 
                 cy.request({
-                        url: 'https://conduit-api.bondaracademy.com/api/articles',
+                        url: Cypress.env("apiUrl") + '/articles', // "apiUrl" is stored in cypress.config.js -> "env" block
                         headers: {'Authorization': `Token ${token}`},
                         method: 'POST',
                         body: articleRequestBody
@@ -97,7 +103,7 @@ describe('Test with backend', () => {
                 cy.get('.article-actions').contains('Delete Article').click()
 
                 cy.request({
-                    url: 'https://conduit-api.bondaracademy.com/api/articles?limit=10&offset=0',
+                    url: Cypress.env("apiUrl") + '/articles?limit=10&offset=0', // "apiUrl" is stored in cypress.config.js -> "env" block
                     headers: {'Authorization': `Token ${token}`},
                     method: 'GET'
                 }).its('body').then((body) => {
@@ -123,7 +129,7 @@ describe('Test with backend', () => {
         cy.get('@token')  //@token alias saved by commands.js -> 'loginToApplication' function
             .then((token) => {
                 cy.request({
-                        url: 'https://conduit-api.bondaracademy.com/api/articles',
+                        url: Cypress.env("apiUrl") + '/articles', // "apiUrl" is stored in cypress.config.js -> "env" block
                         headers: {'Authorization': `Token ${token}`},
                         method: 'POST',
                         body: articleRequestBody
@@ -137,7 +143,7 @@ describe('Test with backend', () => {
                 cy.get('.article-actions').contains('Delete Article').click()
 
                 cy.request({
-                    url: 'https://conduit-api.bondaracademy.com/api/articles?limit=10&offset=0',
+                    url: Cypress.env("apiUrl") + '/articles?limit=10&offset=0',
                     headers: {'Authorization': `Token ${token}`},
                     method: 'GET'
                 }).its('body').then((body) => {
@@ -149,7 +155,7 @@ describe('Test with backend', () => {
 
     it('verify global feed likes count', () => {
         // A wildcard used at the end of ULR (avoid specifying parameters)
-        cy.intercept('GET', 'https://conduit-api.bondaracademy.com/api/articles*', {fixture: 'articles.json'})
+        cy.intercept('GET', Cypress.env("apiUrl") + '/articles*', {fixture: 'articles.json'}) // "apiUrl" is stored in cypress.config.js -> "env" block
 
         // In the articles.json fixture we have 2 posts, 1st has favoritesCount=1, 2nd has favoritesCount=5. Assert this.
         cy.get('app-article-list button').then(heartList => {
@@ -163,7 +169,7 @@ describe('Test with backend', () => {
             file.articles[1].favoritesCount = 6  // Mimic clicking "like" icon which increases previous value 5 by 1 = 6
 
             // Intercept the POST call, when the article "like" button is clicked (see code after this fixture-block)
-            cy.intercept('POST', 'https://conduit-api.bondaracademy.com/api/articles/' + articleLink + '/favorite', file)
+            cy.intercept('POST', Cypress.env("apiUrl") + '/articles/' + articleLink + '/favorite', file)
         })
 
         cy.get('app-article-list button').eq(1).click().should('contain', '6')

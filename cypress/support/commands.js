@@ -30,9 +30,9 @@ Cypress.Commands.add('loginToApplication', () => {
     // cy.get('[placeholder="Password"]').type('conduit')
     // cy.get('form').submit()
 
-    const userCredentials = {"user": {"email": "terem222@ukr.net", "password": "conduit"}}
+    const userCredentials = {"user": {"email": Cypress.env("username"), "password": Cypress.env("password")}} // cypress.config.ts -> 'env' block
 
-    cy.request("POST", "https://conduit-api.bondaracademy.com/api/users/login", userCredentials)
+    cy.request("POST", Cypress.env("apiUrl") + "/users/login", userCredentials)
         .its('body').then((body) => {
         const token = body.user.token
 

@@ -3,7 +3,10 @@
   "version": "1.0.0",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "cy:open_dev": "npx cypress open --env username=cmduserpassed@test.com, password=Welcome000",
+    "cy:open_qa": "npx cypress open --env username=qauser@test.com, password=Welcome111",
+    "cy:open_process": "npx cypress open --env username=$DB_USERNAME, password=$PASSWORD"
   },
   "author": "",
   "license": "ISC",
