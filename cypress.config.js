@@ -13,6 +13,15 @@ module.exports = defineConfig({
     openMode: 0, // when debugging visually in Cypress UI
   },
   e2e: {
+    baseUrl: 'https://conduit.bondaracademy.com/',
+    // specPattern: 'cypress/e2e/**/{*.spec,.*cy}.js',
+    specPattern: [
+      // '**/*.{js,jsx,ts,tsx}',
+      'cypress/e2e/**/*.cy.{js,jsx,ts,tsx}',
+      'cypress/e2e/**/*.spec.{js,jsx,ts,tsx}',
+      'cypress/e2e/**/{*.spec,.*cy}.js',
+      'cypress/e2e/**/*.{js,jsx,ts,tsx}'
+    ]
  /*   setupNodeEvents(on, config) {
       const username = process.env.DB_USERNAME
       const password = process.env.PASSWORD
@@ -25,9 +34,5 @@ module.exports = defineConfig({
       return config
       // implement node event listeners here
     },*/
-
-    baseUrl: 'https://conduit.bondaracademy.com/',
-    specPattern: 'cypress/e2e/**/*.{js,jsx,ts,tsx}',
-    // specPattern: 'cypress/e2e/**/{*.spec,.*cy}.js',
   },
 });
