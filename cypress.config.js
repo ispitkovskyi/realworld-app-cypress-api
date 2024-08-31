@@ -8,8 +8,12 @@ module.exports = defineConfig({
     password: 'conduit',
     apiUrl: 'https://conduit-api.bondaracademy.com/api'
   },
+  retries: {
+    runMode: 2, // in CI pipeline:  npx run --spec 'cypress/e2e/2_secondTest.spec.js'
+    openMode: 0, // when debugging visually in Cypress UI
+  },
   e2e: {
-    setupNodeEvents(on, config) {
+ /*   setupNodeEvents(on, config) {
       const username = process.env.DB_USERNAME
       const password = process.env.PASSWORD
 
@@ -20,9 +24,10 @@ module.exports = defineConfig({
       config.env = {username, password}
       return config
       // implement node event listeners here
-    },
+    },*/
 
     baseUrl: 'https://conduit.bondaracademy.com/',
-    specPattern: 'cypress/e2e/**/*.spec.{js,jsx,ts,tsx}'
+    specPattern: 'cypress/e2e/**/*.{js,jsx,ts,tsx}',
+    // specPattern: 'cypress/e2e/**/{*.spec,.*cy}.js',
   },
 });
